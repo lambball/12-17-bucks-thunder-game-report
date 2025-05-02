@@ -4,7 +4,7 @@
 This project analyzes advanced datapoints from all shot attempts throughout the course of this basketball game.
 
 ## Contents
-- Post Game Report pdf: includes breakdown and 5 insights derived from the dataset
-- BucksAssignment.rmd: R markdown file that includes the code used to gather some of these insights
-- BucksAssignment.html: a knit file of the rmd
-- BucksAssignment.twbx: the Tableau workbook used to create the interactive shot chart (the link to the dashboard is in the "About" section and linked in the Post Game Report pdf)
+- (Post Game Report Pdf): includes breakdown and 5 insights derived from the dataset
+- (BucksAssignment.Rmd): R markdown file that includes the code used to gather some of these insights
+- (BucksAssignment.Html): a knit file of the Rmd
+- (BucksAssignment.Twbx): the Tableau workbook used to create the interactive shot chart (the link to the dashboard is in the "About" section and linked in the Post Game Report pdf)
