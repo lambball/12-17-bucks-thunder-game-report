@@ -1,0 +1,134 @@
+---
+title: "Postgame Report: Bucks vs Thunder – Emirates Cup Final (12/17/24)"
+author: "Luke A. Medley"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+setwd("~/Downloads")
+bucks_assign <- read_csv("data_mil_okc_121724_shots(in).csv")
+```
+
+# Insights and Observations from Dataset
+
+## Insight #1
+```{r}
+# Who got scored on the most?
+
+scored_on_summary <- bucks_assign %>%
+  filter(fg == 1) %>%            
+  group_by(player_nba_closestDef) %>%
+  summarize(FG_allowed = n()) %>%
+  arrange(desc(FG_allowed))  
+
+print(scored_on_summary)
+```
+
+```{r}
+# Who scored the most times against Lopez?
+
+makes_against_lopez_summary <- bucks_assign %>%
+  filter(player_nba_closestDef == "Lopez, Brook", fg == 1) %>%
+  group_by(player_nba_shooter) %>%
+  summarize(makes_against_lopez = n()) %>%
+  arrange(desc(makes_against_lopez))
+
+print(makes_against_lopez_summary)
+```
+
+## Insight #2
+```{r}
+# with at least 5 FGA, who outperformed their average qSQ the best?
+
+player_qsq_summary <- bucks_assign %>%
+  filter(fouled != 1) %>%
+  group_by(player_nba_shooter) %>%
+  summarize(total_shots = n(), fg_made = sum(fg, na.rm = TRUE), fg_pct = (fg_made / total_shots) * 100, avg_qsq = mean(qSQ, na.rm = TRUE)) %>%
+  filter(total_shots >= 5) %>%
+  mutate(fg_qsq_diff = fg_pct - avg_qsq) %>%
+  arrange(desc(fg_qsq_diff))
+
+print(player_qsq_summary)
+```
+
+## Insight #3
+```{r}
+# Average distance of closest defender to each Thunder 3
+
+bucks_assign %>%
+  filter(team_nba_off == "OKC", fga3 == 1) %>%
+  summarise(avg_closest_def_dist = mean(closestDefDist, na.rm = TRUE))
+```
+
+```{r}
+# Average distance of closest defender to each Bucks 3
+
+bucks_assign %>%
+  filter(team_nba_off == "MIL", fga3 == 1) %>%
+  summarise(avg_closest_def_dist = mean(closestDefDist, na.rm = TRUE))
+```
+
+```{r}
+# Bucks most common complex shot type on 3s
+
+bucks_assign %>%
+  filter(team_nba_off == "MIL", fga3 == 1) %>%
+  count(complexShotType) %>%
+  arrange(desc(n))
+```
+
+```{r}
+# Thunder most common complex shot type on 3s
+bucks_assign %>%
+  filter(team_nba_off == "OKC", fga3 == 1) %>%
+  count(complexShotType) %>%
+  arrange(desc(n))
+```
+
+```{r}
+# Bucks shooting % on heavily contested 3s
+
+bucks_assign %>%
+  filter(team_nba_off == "OKC", fga3 == 1, contestLevel == "heavily_contested") %>%
+  summarise(
+    total_attempts = n(),
+    total_makes = sum(fg, na.rm = TRUE),
+    three_pt_pct = total_makes / total_attempts)
+```
+
+```{r}
+# Thunder shooting % on heavily contested 3s
+
+bucks_assign %>%
+  filter(team_nba_off == "MIL", fga3 == 1, contestLevel == "heavily_contested") %>%
+  summarise(
+    total_attempts = n(),
+    total_makes = sum(fg, na.rm = TRUE),
+    three_pt_pct = total_makes / total_attempts)
+```
+
+```{r}
+# Thunder average release time on 3s
+
+bucks_assign %>%
+  filter(team_nba_off == "OKC", fga3 == 1) %>%
+  summarise(avg_release_time = mean(releaseTime, na.rm = TRUE))
+```
+
+```{r}
+# Bucks average release time on 3s
+
+bucks_assign %>%
+  filter(team_nba_off == "MIL", fga3 == 1) %>%
+  summarise(avg_release_time = mean(releaseTime, na.rm = TRUE))
+```
+
+
+
+
